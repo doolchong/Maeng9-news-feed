@@ -6,12 +6,14 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -33,25 +35,34 @@ public class JwtFilter implements Filter {
 
         String url = httpRequest.getRequestURI();
 
-        // `/v{숫자}/auth`로 시작하는 URL은 필터를 통과하지 않도록 설정
+        // `/auth`로 시작하는 URL은 필터를 통과하지 않도록 설정
         if (authPattern.matcher(url).matches()) {
             chain.doFilter(request, response);
             return;
         }
 
 
-        String bearerJwt = httpRequest.getHeader("Authorization");
+        // 쿠키에서 JWT 토큰 찾기
+        String token = null;
+        Cookie[] cookies = httpRequest.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("Authorization".equals(cookie.getName())) {
+                    token = URLDecoder.decode(cookie.getValue(), "UTF-8");
+                    break;
+                }
+            }
+        }
 
-        if (bearerJwt == null || !bearerJwt.startsWith("Bearer ")) {
+        if (token == null) {
             // 토큰이 없는 경우 400을 반환합니다.
             httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT 토큰이 필요합니다.");
             return;
         }
 
-        String jwt = jwtUtil.substringToken(bearerJwt);
-
         try {
             // JWT 유효성 검사와 claims 추출
+            String jwt = jwtUtil.substringToken(token);
             Claims claims = jwtUtil.extractClaims(jwt);
 
             chain.doFilter(request, response);

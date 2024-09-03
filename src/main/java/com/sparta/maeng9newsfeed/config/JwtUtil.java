@@ -5,11 +5,15 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -45,13 +49,33 @@ public class JwtUtil {
                         .compact();
     }
 
+    public void addJwtToCookie(String token, HttpServletResponse res) {
+        try {
+            String encodeToken = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+
+            Cookie cookie = new Cookie("Authorization", encodeToken); // Name-Value
+            cookie.setHttpOnly(true); // 자바스크립트에서 쿠키에 접근할 수 없도록 설정
+            cookie.setMaxAge(60 * 60); // 쿠키의 유효 기간 설정(1시간)
+            cookie.setPath("/");
+
+            // Response 객체에 Cookie 추가
+            res.addCookie(cookie);
+        } catch (UnsupportedEncodingException e) {
+            log.error("JWT 쿠키 생성 중 에러 발생", e.getMessage());
+        }
+    }
+
+
     public String substringToken(String tokenValue) {
+
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
         log.error("Not Found Token");
         throw new NullPointerException("Not Found Token");
+
     }
+
 
     public Claims extractClaims(String token) {
         return Jwts.parserBuilder()
