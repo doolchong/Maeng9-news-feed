@@ -1,8 +1,6 @@
 package com.sparta.maeng9newsfeed.entity;
 
-import com.sparta.maeng9newsfeed.dto.LoginRequest;
 import com.sparta.maeng9newsfeed.dto.SignupRequest;
-import com.sparta.maeng9newsfeed.dto.SignupResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,3 +33,4 @@ public class User extends Timestamped {
     }
 
 }
+
