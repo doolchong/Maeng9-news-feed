@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class JwtFilter implements Filter {
 
     private final JwtUtil jwtUtil;
-    private final Pattern authPattern = Pattern.compile("^/auth.*");
+    private final Pattern authPattern = Pattern.compile("^/.*");
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
