@@ -1,5 +1,6 @@
 package com.sparta.maeng9newsfeed.entity;
 
+import com.sparta.maeng9newsfeed.dto.LoginRequest;
 import com.sparta.maeng9newsfeed.dto.SignupRequest;
 import com.sparta.maeng9newsfeed.dto.SignupResponse;
 import jakarta.persistence.*;
@@ -32,4 +33,5 @@ public class User extends Timestamped {
         intro = "한 줄 소개를 입력해주세요";
         status = true;
     }
+
 }
