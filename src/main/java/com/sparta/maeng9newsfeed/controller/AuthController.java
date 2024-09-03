@@ -1,5 +1,6 @@
 package com.sparta.maeng9newsfeed.controller;
 
+import com.sparta.maeng9newsfeed.dto.LoginRequest;
 import com.sparta.maeng9newsfeed.dto.SignupRequest;
 import com.sparta.maeng9newsfeed.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,15 @@ public class AuthController {
     @PostMapping("/auth/signup")
     public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) {
         String bearerToken = authService.signup(signupRequest);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.AUTHORIZATION, bearerToken)
+                .build();
+    }
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
+        String bearerToken = authService.login(loginRequest);
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.AUTHORIZATION, bearerToken)
