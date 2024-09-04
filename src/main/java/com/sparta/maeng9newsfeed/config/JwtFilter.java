@@ -43,7 +43,6 @@ public class JwtFilter implements Filter {
 
 
         // 쿠키에서 JWT 토큰 찾기
-        // 쿠키에서 JWT 토큰 찾기
         String token = null;
         Cookie[] cookies = httpRequest.getCookies();
         if (cookies != null) {

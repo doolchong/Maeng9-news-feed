@@ -1,6 +1,8 @@
 package com.sparta.maeng9newsfeed.entity;
 
+import com.sparta.maeng9newsfeed.config.PasswordEncoder;
 import com.sparta.maeng9newsfeed.dto.SignupRequest;
+import com.sparta.maeng9newsfeed.dto.UserUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,13 +39,22 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board> boardList;
 
-    public User(SignupRequest signupRequest) {
-        userName = signupRequest.getUserName();
-        email = signupRequest.getEmail();
-        password = signupRequest.getPassword();
-        intro = "한 줄 소개를 입력해주세요";
-        status = true;
+    public User(String userName, String email, String password, String intro, boolean status) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.intro = intro;
+        this.status = status;
     }
 
+    public void update(UserUpdateRequest userUpdateRequest) {
+        userName = userUpdateRequest.getUserName();
+        email = userUpdateRequest.getEmail();
+        intro = userUpdateRequest.getIntro();
+    }
+
+    public void updatePaswword(String password) {
+        this.password = password;
+    }
 }
 

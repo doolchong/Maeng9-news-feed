@@ -65,6 +65,14 @@ public class JwtUtil {
         }
     }
 
+    // 쿠키 만료 메서드
+    public void expireCookie(HttpServletResponse res) {
+        Cookie cookie = new Cookie("Authorization", null); // 쿠키 삭제
+        cookie.setMaxAge(0); // 쿠키 만료 설정
+        cookie.setPath("/"); // 쿠키 경로 설정
+        res.addCookie(cookie);
+    }
+
 
     public String substringToken(String tokenValue) {
 
