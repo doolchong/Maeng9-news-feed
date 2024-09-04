@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,9 @@ public class User extends Timestamped {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<BoardLike> boardLikeList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public User(SignupRequest signupRequest) {
         userName = signupRequest.getUserName();
