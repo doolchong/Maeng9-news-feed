@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +59,7 @@ public class FriendService {
         User sender = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
         // 해당 요청 유무 확인 후 친구요청 제거
         friendDemandRepository.findBySender_IdAndReceiver_Id(sender.getId(), receiverId).ifPresent(friendDemandRepository::delete);
-        // 친구 목록에 양방향 저장
+        // 친구 목록 데이블에 양방향 저장(보낸 경우, 받은 경우)
         friendRepository.save(new Friend(sender, receiver));
         friendRepository.save(new Friend(receiver, sender));
         return "친구 수락 완료";
@@ -74,7 +74,7 @@ public class FriendService {
     @Transactional
     public String rejectFriend(Long receiverId, FriendRequest friendRequest) {
         User sender = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
-        friendDemandRepository.findBySender_IdAndReceiver_Id(receiverId, sender.getId())
+        friendDemandRepository.findBySender_IdAndReceiver_Id(sender.getId(), receiverId)
                 .ifPresent(friendDemandRepository::delete);     // 해당 친구 요청이 있으면 -> 요청 목록에서 삭제
         return "친구 거절 완료";
     }
@@ -85,8 +85,11 @@ public class FriendService {
      * @return List<FriendResponse> : 보낸 친구추가요청 목록
      */
     public List<FriendResponse> getSendFriendList(Long userId) {
-        return friendDemandRepository.findBySender_Id(userId)
-                .map(friendDemand -> Collections.singletonList(friendDemand.toResponse()))
+        return friendDemandRepository.findAllBySender_Id(userId)
+                .filter(list -> !list.isEmpty())  // 리스트가 비어있지 않은지 확인
+                .map(list -> list.stream()
+                        .map(FriendDemand::toResponse)  // 각 FriendDemand를 FriendResponse로 변환
+                        .collect(Collectors.toList()))  // 변환된 FriendResponse 객체들을 리스트로 수집
                 .orElseThrow(() -> new RuntimeException("보낸 친구신청이 없습니다."));
     }
 
@@ -96,8 +99,11 @@ public class FriendService {
      * @return List<FriendResponse> : 받은 친구추가요청 목록
      */
     public List<FriendResponse> getReceiveFriendList(Long userId) {
-        return friendDemandRepository.findByReceiver_Id(userId)
-                .map(friendDemand -> Collections.singletonList(friendDemand.toResponse()))
+        return friendDemandRepository.findAllByReceiver_Id(userId)
+                .filter(list -> !list.isEmpty())
+                .map(list -> list.stream()
+                        .map(FriendDemand::toResponse)
+                        .collect(Collectors.toList()))
                 .orElseThrow(() -> new RuntimeException("받은 친구신청이 없습니다."));
     }
 
@@ -107,8 +113,11 @@ public class FriendService {
      * @return List<FriendResponse> : 친구 목록
      */
     public List<FriendResponse> getFriendList(Long userId) {
-         return friendRepository.findBySender_Id(userId)
-                .map(friend -> Collections.singletonList(friend.toResponse()))
+         return friendRepository.findAllBySender_Id(userId)
+                 .filter(list -> !list.isEmpty())
+                 .map(list -> list.stream()
+                         .map(Friend::toResponse)
+                         .collect(Collectors.toList()))
                 .orElseThrow(()->new RuntimeException("친구 목록이 없습니다."));
     }
 
@@ -121,6 +130,7 @@ public class FriendService {
     @Transactional
     public String deleteFriend(Long senderId, FriendRequest friendRequest) {
         User receiver = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
+        // 친구 목록 데이블에서 양방향 삭제(보낸 경우, 받은 경우)
         friendRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId())
                 .ifPresent(friendRepository::delete);
         friendRepository.findBySender_IdAndReceiver_Id(receiver.getId(), senderId)
