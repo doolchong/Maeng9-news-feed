@@ -40,6 +40,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public void updatePassword(long userId, PasswordChangeRequest passwordChangeRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("해당 사용자를 찾을 수 없습니다."));
 

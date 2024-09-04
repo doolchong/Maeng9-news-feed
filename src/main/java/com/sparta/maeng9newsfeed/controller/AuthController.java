@@ -2,6 +2,7 @@ package com.sparta.maeng9newsfeed.controller;
 
 import com.sparta.maeng9newsfeed.config.JwtUtil;
 import com.sparta.maeng9newsfeed.dto.LoginRequest;
+import com.sparta.maeng9newsfeed.dto.LogoutResponse;
 import com.sparta.maeng9newsfeed.dto.SignupRequest;
 import com.sparta.maeng9newsfeed.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,5 +34,11 @@ public class AuthController {
         String token = authService.login(loginRequest);
         jwtUtil.addJwtToCookie(token, response);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/auth/logout")
+    public ResponseEntity<LogoutResponse> logout(HttpServletResponse response) {
+        LogoutResponse logoutResponse = authService.logout(response);
+        return ResponseEntity.ok(logoutResponse);
     }
 }
