@@ -19,4 +19,11 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST, e.getMessage(), URI.create(request.getRequestURI())
         ));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionResponse.makeExceptionDto(
+                HttpStatus.UNAUTHORIZED, e.getMessage(), URI.create(request.getRequestURI())
+        ));
+    }
 }

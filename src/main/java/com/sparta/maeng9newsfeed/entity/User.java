@@ -36,6 +36,9 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boardList;
+
     public User(String userName, String email, String password, String intro, boolean status) {
         this.userName = userName;
         this.email = email;
@@ -43,7 +46,6 @@ public class User extends Timestamped {
         this.intro = intro;
         this.status = status;
     }
-
 
     public void update(UserUpdateRequest userUpdateRequest) {
         userName = userUpdateRequest.getUserName();
