@@ -21,7 +21,7 @@ public class CommentLikeService {
 
 
     @Transactional
-    public String likeComment(long commentId, long userId) {
+    public String likeComment(long userId, long commentId) {
 
         if (!commentLikeRepository.findByComment_IdAndUser_Id(commentId, userId).isPresent()) {
 

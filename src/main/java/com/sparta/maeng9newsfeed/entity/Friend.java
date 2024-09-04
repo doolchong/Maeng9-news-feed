@@ -27,7 +27,7 @@ public class Friend {
         this.receiver = receiver;
     }
 
-    public FriendResponse toResponse() {
+    public FriendResponse toReceiverResponse() {
         return new FriendResponse(
                 this.getReceiver().getUserName(),
                 this.getReceiver().getEmail()
