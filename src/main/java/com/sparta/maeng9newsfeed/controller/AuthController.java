@@ -20,6 +20,7 @@ public class AuthController {
     private final AuthService authService;
     private final JwtUtil jwtUtil;
 
+
     @PostMapping("/auth/signup")
     public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) {
         String bearerToken = authService.signup(signupRequest);
@@ -41,4 +42,5 @@ public class AuthController {
         LogoutResponse logoutResponse = authService.logout(response);
         return ResponseEntity.ok(logoutResponse);
     }
+
 }

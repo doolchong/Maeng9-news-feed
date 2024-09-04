@@ -51,4 +51,5 @@ public class AuthService {
         jwtUtil.expireCookie(response);
         return new LogoutResponse(200, "로그아웃 성공.");
     }
+
 }
