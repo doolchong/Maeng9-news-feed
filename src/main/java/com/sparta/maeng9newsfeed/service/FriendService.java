@@ -49,16 +49,16 @@ public class FriendService {
 
     /**
      * 친구 요청 수락
-     * @param senderId 요청을 받은 사용자 ID (수락 당사자 ID)
+     * @param receiverId 요청을 받은 사용자 ID (수락 당사자 ID)
      * @param friendRequest 요청을 보내온 사용자 ID를 담은 DTO
      * @return 성공 시 "친구 수락 완료"
      */
     @Transactional
-    public String acceptFriend(Long senderId, FriendRequest friendRequest) {
-        User sender = userRepository.findById(senderId).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
-        User receiver = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
+    public String acceptFriend(Long receiverId, FriendRequest friendRequest) {
+        User receiver = userRepository.findById(receiverId).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
+        User sender = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
         // 해당 요청 유무 확인 후 친구요청 제거
-        friendDemandRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId()).ifPresent(friendDemandRepository::delete);
+        friendDemandRepository.findBySender_IdAndReceiver_Id(sender.getId(), receiverId).ifPresent(friendDemandRepository::delete);
         // 친구 목록에 양방향 저장
         friendRepository.save(new Friend(sender, receiver));
         friendRepository.save(new Friend(receiver, sender));
@@ -67,14 +67,14 @@ public class FriendService {
 
     /**
      * 친구 요청 거절
-     * @param senderId 요청을 받은 사용자 ID (거절 당사자 ID)
+     * @param receiverId 요청을 받은 사용자 ID (거절 당사자 ID)
      * @param friendRequest 요청을 보내온 사용자 ID를 담은 DTO
      * @return 성공 시 "친구 거절 완료"
      */
     @Transactional
-    public String rejectFriend(Long senderId, FriendRequest friendRequest) {
-        User receiver = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
-        friendDemandRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId())
+    public String rejectFriend(Long receiverId, FriendRequest friendRequest) {
+        User sender = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
+        friendDemandRepository.findBySender_IdAndReceiver_Id(receiverId, sender.getId())
                 .ifPresent(friendDemandRepository::delete);     // 해당 친구 요청이 있으면 -> 요청 목록에서 삭제
         return "친구 거절 완료";
     }
@@ -87,7 +87,7 @@ public class FriendService {
     public List<FriendResponse> getSendFriendList(Long userId) {
         return friendDemandRepository.findBySender_Id(userId)
                 .map(friendDemand -> Collections.singletonList(friendDemand.toResponse()))
-                .orElseThrow(() -> new RuntimeException("보낸 친구 추가 요청이 없습니다."));
+                .orElseThrow(() -> new RuntimeException("보낸 친구신청이 없습니다."));
     }
 
     /**
@@ -98,7 +98,7 @@ public class FriendService {
     public List<FriendResponse> getReceiveFriendList(Long userId) {
         return friendDemandRepository.findByReceiver_Id(userId)
                 .map(friendDemand -> Collections.singletonList(friendDemand.toResponse()))
-                .orElseThrow(() -> new RuntimeException("받은 친구 추가 요청이 없습니다."));
+                .orElseThrow(() -> new RuntimeException("받은 친구신청이 없습니다."));
     }
 
     /**
@@ -122,6 +122,8 @@ public class FriendService {
     public String deleteFriend(Long senderId, FriendRequest friendRequest) {
         User receiver = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
         friendRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId())
+                .ifPresent(friendRepository::delete);
+        friendRepository.findBySender_IdAndReceiver_Id(receiver.getId(), senderId)
                 .ifPresent(friendRepository::delete);
         return "친구 삭제 완료";
     }
