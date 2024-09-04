@@ -28,6 +28,7 @@ public class User extends Timestamped {
     private String password;
     @Column(nullable = false)
     private String intro;
+    @Column(nullable = false)
     private boolean status;     // 1. true : 회원가입 상태 2. false : 회원탈퇴 상태
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -55,6 +56,11 @@ public class User extends Timestamped {
 
     public void updatePaswword(String password) {
         this.password = password;
+    }
+
+    // 회원 가입 상태 (true : 회원 가입, flase : 회원 탈퇴)
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }
 
