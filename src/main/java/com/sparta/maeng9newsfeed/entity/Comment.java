@@ -30,9 +30,10 @@ public class Comment extends Timestamped {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<CommentLike> commentLikes;
 
-    public Comment(String content, Board board) {
+    public Comment(String content, Board board, User user) {
         this.content = content;
         this.board = board;
+        this.user = user;
     }
 
     public void update(String content) {
