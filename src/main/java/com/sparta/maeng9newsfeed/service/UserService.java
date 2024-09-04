@@ -27,5 +27,13 @@ public class UserService {
         user.update(userUpdateRequest);
 
         return new UserUpdateResponse(user.getUserName(), user.getEmail(), userUpdateRequest.getIntro());
+
+    }
+
+    public User findByUserId(long userId) {
+
+        return userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("유저를 찾을 수 없습니다.")
+        );
     }
 }

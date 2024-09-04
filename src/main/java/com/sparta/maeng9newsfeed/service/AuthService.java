@@ -16,7 +16,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public String signup(SignupRequest signupRequest) {
         User newUser = new User(signupRequest);
         User saveduser = userRepository.save(newUser);
@@ -24,7 +24,7 @@ public class AuthService {
         return jwtUtil.createToken(saveduser.getId(), saveduser.getEmail());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public String login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
