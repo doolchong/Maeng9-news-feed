@@ -24,13 +24,18 @@ public class Board extends Timestamped {
     private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<BoardLike> boardLikeList;
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
-    public Board(String content) {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Board(String content, User user) {
         this.content = content;
+        this.user = user;
     }
 
     public void updateBoard(String content) {
