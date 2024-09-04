@@ -85,10 +85,10 @@ public class FriendService {
      * @return List<FriendResponse> : 보낸 친구추가요청 목록
      */
     public List<FriendResponse> getSendFriendList(Long userId) {
-        return friendDemandRepository.findAllBySender_Id(userId)
+        return friendDemandRepository.findAllBySender_Id(userId)      // 사용자id를 받은친구로 조회
                 .filter(list -> !list.isEmpty())  // 리스트가 비어있지 않은지 확인
                 .map(list -> list.stream()
-                        .map(FriendDemand::toResponse)  // 각 FriendDemand를 FriendResponse로 변환
+                        .map(FriendDemand::toReceiverResponse)  // 각 FriendDemand를 FriendResponse로 변환(receiver 사용자만 반환)
                         .collect(Collectors.toList()))  // 변환된 FriendResponse 객체들을 리스트로 수집
                 .orElseThrow(() -> new RuntimeException("보낸 친구신청이 없습니다."));
     }
@@ -102,7 +102,7 @@ public class FriendService {
         return friendDemandRepository.findAllByReceiver_Id(userId)
                 .filter(list -> !list.isEmpty())
                 .map(list -> list.stream()
-                        .map(FriendDemand::toResponse)
+                        .map(FriendDemand::toSenderResponse)  // (sender 사용자만 반환)
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new RuntimeException("받은 친구신청이 없습니다."));
     }
@@ -116,7 +116,7 @@ public class FriendService {
          return friendRepository.findAllBySender_Id(userId)
                  .filter(list -> !list.isEmpty())
                  .map(list -> list.stream()
-                         .map(Friend::toResponse)
+                         .map(Friend::toReceiverResponse)// (receiver 사용자만 반환)
                          .collect(Collectors.toList()))
                 .orElseThrow(()->new RuntimeException("친구 목록이 없습니다."));
     }

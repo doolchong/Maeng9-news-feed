@@ -27,10 +27,17 @@ public class FriendDemand {
         this.receiver = receiver;
     }
 
-    public FriendResponse toResponse(){
+    public FriendResponse toReceiverResponse(){
         return new FriendResponse(
                 this.getReceiver().getUserName(),
                 this.getReceiver().getEmail()
+        );
+    }
+
+    public FriendResponse toSenderResponse(){
+        return new FriendResponse(
+                this.getSender().getUserName(),
+                this.getSender().getEmail()
         );
     }
 }
