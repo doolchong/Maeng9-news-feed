@@ -1,6 +1,7 @@
 package com.sparta.maeng9newsfeed.entity;
 
 import com.sparta.maeng9newsfeed.dto.SignupRequest;
+import com.sparta.maeng9newsfeed.dto.UserUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,5 +43,10 @@ public class User extends Timestamped {
         status = true;
     }
 
+    public void update(UserUpdateRequest userUpdateRequest) {
+        userName = userUpdateRequest.getUserName();
+        email = userUpdateRequest.getEmail();
+        intro = userUpdateRequest.getIntro();
+    }
 }
 
