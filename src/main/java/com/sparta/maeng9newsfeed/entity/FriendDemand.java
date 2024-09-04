@@ -15,11 +15,11 @@ public class FriendDemand {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id", name = "sender_id", nullable = false)
+    @JoinColumn(referencedColumnName = "user_id", name = "sender_id", nullable = false)
     private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id", name = "receiver_id", nullable = false)
+    @JoinColumn(referencedColumnName = "user_id", name = "receiver_id", nullable = false)
     private User receiver;
 
     public FriendDemand(User sender, User receiver) {
