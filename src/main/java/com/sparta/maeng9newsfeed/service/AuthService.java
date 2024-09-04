@@ -2,13 +2,12 @@ package com.sparta.maeng9newsfeed.service;
 
 import com.sparta.maeng9newsfeed.config.JwtUtil;
 import com.sparta.maeng9newsfeed.config.PasswordEncoder;
-import com.sparta.maeng9newsfeed.dto.LoginRequest;
-import com.sparta.maeng9newsfeed.dto.LogoutResponse;
-import com.sparta.maeng9newsfeed.dto.SignupRequest;
+import com.sparta.maeng9newsfeed.dto.*;
 import com.sparta.maeng9newsfeed.entity.User;
 import com.sparta.maeng9newsfeed.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,5 +49,23 @@ public class AuthService {
     public LogoutResponse logout(HttpServletResponse response) {
         jwtUtil.expireCookie(response);
         return new LogoutResponse(200, "로그아웃 성공.");
+    }
+
+    @Transactional
+    public String signout(long userId, SignoutRequest signoutRequest) {
+
+        User authuser = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("존재하지 않은 아이디입니다"));
+
+        if (!passwordEncoder.matches(signoutRequest.getPassword(), authuser.getPassword())) {
+
+            return "비밀 번호가 일치하지 않습니다";
+        }
+
+        //회원 탈퇴 처리
+        authuser.setStatus(false);
+        userRepository.save(authuser);
+
+        return "회원 탈퇴 완료";
+
     }
 }
