@@ -50,5 +50,9 @@ public class User extends Timestamped {
         email = userUpdateRequest.getEmail();
         intro = userUpdateRequest.getIntro();
     }
+
+    public void updatePaswword(String password) {
+        this.password = password;
+    }
 }
 
