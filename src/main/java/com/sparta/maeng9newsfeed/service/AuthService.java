@@ -31,4 +31,5 @@ public class AuthService {
 
         return jwtUtil.createToken(user.getId(), user.getEmail());
     }
+
 }

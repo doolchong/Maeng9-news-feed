@@ -4,7 +4,6 @@ import com.sparta.maeng9newsfeed.config.JwtUtil;
 import com.sparta.maeng9newsfeed.dto.LoginRequest;
 import com.sparta.maeng9newsfeed.dto.SignupRequest;
 import com.sparta.maeng9newsfeed.service.AuthService;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
