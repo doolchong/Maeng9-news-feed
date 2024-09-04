@@ -1,5 +1,6 @@
 package com.sparta.maeng9newsfeed.controller;
 
+import com.sparta.maeng9newsfeed.annotation.Auth;
 import com.sparta.maeng9newsfeed.dto.*;
 import com.sparta.maeng9newsfeed.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +17,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{boardId}/comment")
-    public ResponseEntity<CommentSaveResponse> saveComment(@PathVariable long boardId, @RequestBody CommentSaveRequest commentSaveRequest) {
-        return ResponseEntity.ok(commentService.saveComment(boardId, commentSaveRequest));
+    public ResponseEntity<CommentSaveResponse> saveComment(@Auth AuthUser authUser, @PathVariable long boardId, @RequestBody CommentSaveRequest commentSaveRequest) {
+        return ResponseEntity.ok(commentService.saveComment(authUser.getId(), boardId, commentSaveRequest));
     }
 
     @PutMapping("/{boardId}/{commentId}")
-    public ResponseEntity<CommentUpdateResponse> updateComment(@PathVariable long boardId, @PathVariable long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest) {
-        return ResponseEntity.ok(commentService.updateComment(boardId, commentId, commentUpdateRequest));
+    public ResponseEntity<CommentUpdateResponse> updateComment(@Auth AuthUser authUser, @PathVariable long boardId, @PathVariable long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest) {
+        return ResponseEntity.ok(commentService.updateComment(authUser.getId(), boardId, commentId, commentUpdateRequest));
     }
 
     @GetMapping("/{boardId}/comment")
@@ -30,8 +31,8 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getComments(boardId));
     }
 
-    @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable long commentId) {
-        commentService.delete(commentId);
+    @DeleteMapping("/{boardId}/{commentId}")
+    public void deleteComment(@Auth AuthUser authUser, @PathVariable long boardId, @PathVariable long commentId) {
+        commentService.delete(authUser.getId(), boardId, commentId);
     }
 }

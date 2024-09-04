@@ -3,6 +3,7 @@ package com.sparta.maeng9newsfeed.service;
 import com.sparta.maeng9newsfeed.dto.*;
 import com.sparta.maeng9newsfeed.entity.Board;
 import com.sparta.maeng9newsfeed.entity.Comment;
+import com.sparta.maeng9newsfeed.entity.User;
 import com.sparta.maeng9newsfeed.repository.BoardRepository;
 import com.sparta.maeng9newsfeed.repository.CommentRepository;
 import com.sparta.maeng9newsfeed.repository.UserRepository;
@@ -23,21 +24,29 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CommentSaveResponse saveComment(long boardId, CommentSaveRequest commentSaveRequest) {
+    public CommentSaveResponse saveComment(long userId, long boardId, CommentSaveRequest commentSaveRequest) {
 
         Board board = findBoardById(boardId);
+        User user = findUserById(userId);
 
-        Comment newComment = new Comment(commentSaveRequest.getContent(), board);
+        Comment newComment = new Comment(commentSaveRequest.getContent(), board, user);
         Comment savedComment = commentRepository.save(newComment);
 
         return CommentSaveResponse.CommentToDto(savedComment);
     }
 
     @Transactional
-    public CommentUpdateResponse updateComment(long boardId, long commentId, CommentUpdateRequest commentUpdateRequest) {
+    public CommentUpdateResponse updateComment(long userId, long boardId, long commentId, CommentUpdateRequest commentUpdateRequest) {
 
+        Board board = findBoardById(boardId);
         Comment comment = findCommentdById(commentId);
-        comment.update(commentUpdateRequest.getContent());
+
+        if (userId == comment.getUser().getId() ||
+                userId == board.getUser().getId()) {
+            comment.update(commentUpdateRequest.getContent());
+        } else {
+            throw new IllegalArgumentException("게시글의 작성자 또는 댓글 작성자만 수정할 수 있습니다.");
+        }
 
         return CommentUpdateResponse.CommentToDto(comment);
     }
@@ -55,13 +64,18 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(long commentId) {
+    public void delete(long userId, long boardId, long commentId) {
 
-        if (!commentRepository.existsById(commentId)) {
-            throw new NullPointerException("존재하지 않는 댓글입니다.");
+        Board board = findBoardById(boardId);
+        Comment comment = findCommentdById(commentId);
+
+        if (userId == comment.getUser().getId() ||
+                userId == board.getUser().getId()) {
+            commentRepository.deleteById(commentId);
+        } else {
+            throw new IllegalArgumentException("게시글의 작성자 또는 댓글 작성자만 삭제할 수 있습니다.");
         }
 
-        commentRepository.deleteById(commentId);
     }
 
     public Board findBoardById(long boardId) {
@@ -70,5 +84,9 @@ public class CommentService {
 
     public Comment findCommentdById(long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() -> new NullPointerException("존재하지 않는 댓글입니다."));
+    }
+
+    public User findUserById(long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new NullPointerException("존재하지 않는 유저입니다."));
     }
 }
