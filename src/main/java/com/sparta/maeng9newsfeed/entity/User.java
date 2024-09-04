@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -13,6 +15,7 @@ public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
     @Column(nullable = false)
     private String userName;
@@ -23,6 +26,9 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String intro;
     private boolean status;     // 1. true : 회원가입 상태 2. false : 회원탈퇴 상태
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<BoardLike> boardLikeList;
 
     public User(SignupRequest signupRequest) {
         userName = signupRequest.getUserName();

@@ -1,16 +1,16 @@
 package com.sparta.maeng9newsfeed.controller;
 
 import com.sparta.maeng9newsfeed.dto.BoardResponse;
-import com.sparta.maeng9newsfeed.entity.Board;
 import com.sparta.maeng9newsfeed.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class BoardController {
@@ -35,5 +35,10 @@ public class BoardController {
     @DeleteMapping("/boards/{boardId}")
     public ResponseEntity<String> delete(@PathVariable long boardId) {
         return ResponseEntity.ok().body(boardService.delete(boardId));
+    }
+
+    @PostMapping("/boards/{boardId}/users/{userId}")
+    public ResponseEntity<String> boardLike(@PathVariable long boardId, @PathVariable long userId) {
+        return ResponseEntity.ok().body(boardService.boardLike(boardId, userId));
     }
 }
