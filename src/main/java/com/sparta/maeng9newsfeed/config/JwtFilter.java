@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class JwtFilter implements Filter {
 
     private final JwtUtil jwtUtil;
-    private final Pattern authPattern = Pattern.compile("^/.*");
+    private final Pattern authPattern = Pattern.compile("^/auth.*");
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -42,7 +42,6 @@ public class JwtFilter implements Filter {
         }
 
 
-        // 쿠키에서 JWT 토큰 찾기
         // 쿠키에서 JWT 토큰 찾기
         String token = null;
         Cookie[] cookies = httpRequest.getCookies();
