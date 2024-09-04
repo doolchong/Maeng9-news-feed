@@ -43,6 +43,7 @@ public class JwtFilter implements Filter {
 
 
         // 쿠키에서 JWT 토큰 찾기
+        // 쿠키에서 JWT 토큰 찾기
         String token = null;
         Cookie[] cookies = httpRequest.getCookies();
         if (cookies != null) {
@@ -54,6 +55,7 @@ public class JwtFilter implements Filter {
             }
         }
 
+
         if (token == null) {
             // 토큰이 없는 경우 400을 반환합니다.
             httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT 토큰이 필요합니다.");
@@ -64,6 +66,9 @@ public class JwtFilter implements Filter {
             // JWT 유효성 검사와 claims 추출
             String jwt = jwtUtil.substringToken(token);
             Claims claims = jwtUtil.extractClaims(jwt);
+
+            httpRequest.setAttribute("id", Long.parseLong((claims.getSubject())));
+            httpRequest.setAttribute("email", claims.get("email", String.class));
 
             chain.doFilter(request, response);
         } catch (SecurityException | MalformedJwtException e) {
