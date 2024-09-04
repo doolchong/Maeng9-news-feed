@@ -34,6 +34,9 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boardList;
+
     public User(SignupRequest signupRequest) {
         userName = signupRequest.getUserName();
         email = signupRequest.getEmail();
