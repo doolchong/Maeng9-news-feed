@@ -1,9 +1,13 @@
 package com.sparta.maeng9newsfeed.dto;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FriendResponse {
-    private final String userName;
-    private final String email;
+    private String userName;
+    private String email;
 }
