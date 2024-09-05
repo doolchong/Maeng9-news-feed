@@ -40,6 +40,8 @@ dependencies {
     // json
     implementation 'org.json:json:20230227'
 
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     implementation 'at.favre.lib:bcrypt:0.10.2'
 
 }
