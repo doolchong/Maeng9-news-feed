@@ -151,7 +151,7 @@ public class FriendService {
     @Scheduled(cron = "0 0 0 * * *") // 매일 자정에 메소드 실행
     public void renewFriendDemandList() {
         LocalDateTime expirationDate = LocalDateTime.now().minusDays(3); // 3일이 지난 친구 요청
-        friendDemandRepository.deleteAllByReceiverCreatedAtBefore(expirationDate);
+        friendDemandRepository.deleteAllByCreatedAtBefore(expirationDate);
     }
 
 }

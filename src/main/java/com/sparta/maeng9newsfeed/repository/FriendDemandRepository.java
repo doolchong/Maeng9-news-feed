@@ -16,5 +16,5 @@ public interface FriendDemandRepository extends JpaRepository<FriendDemand, Long
 
     Optional<List<FriendDemand>> findAllByReceiver_Id(Long receiverId);
 
-    void deleteAllByReceiverCreatedAtBefore(LocalDateTime expirationDate);
+    void deleteAllByCreatedAtBefore(LocalDateTime expirationDate);
 }
