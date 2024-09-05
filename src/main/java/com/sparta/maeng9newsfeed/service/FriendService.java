@@ -34,6 +34,10 @@ public class FriendService {
     public String demandFriend(Long senderId, FriendRequest friendRequest) {
         User sender = userRepository.findById(senderId).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
         User receiver = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
+        // 본인에게 한 신청인지 확인
+        if (receiver.getId().equals(sender.getId())) {
+            throw new RuntimeException("본인에게 친구신청을 할 수 없습니다.");
+        }
         // 중복 신청 확인
         if(friendDemandRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId()).isPresent()){
             throw new RuntimeException("해당 친구 요청이 이미 존재합니다.");
