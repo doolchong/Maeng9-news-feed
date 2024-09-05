@@ -46,6 +46,10 @@ public class FriendService {
         if(friendDemandRepository.findByReceiver_Id(receiver.getId()).isPresent()){
             throw new RuntimeException("해당 사용자에게 친구 요청을 받았습니다.");
         }
+        // 이미 친구인지 확인
+        if(friendRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId()).isPresent()){
+            throw new RuntimeException("해당 사용자와 이미 친구입니다.");
+        }
         // 친구 추가
         friendDemandRepository.save(new FriendDemand(sender, receiver));
         return "친구 요청 완료";
