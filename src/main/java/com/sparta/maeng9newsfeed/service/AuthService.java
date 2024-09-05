@@ -40,6 +40,12 @@ public class AuthService {
     public String login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+
+        // 이미 탈퇴한 회원의 아이디로 로그인 할 시
+        if (!user.isStatus()) {
+            throw new IllegalArgumentException("이미 탈퇴한 회원입니다.");
+        }
+
         // 입력된 비밀번호와 저장된 비밀번호를 비교
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
