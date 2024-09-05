@@ -1,7 +1,7 @@
 package com.sparta.maeng9newsfeed.config;
 
 import com.sparta.maeng9newsfeed.annotation.Auth;
-import com.sparta.maeng9newsfeed.dto.AuthUser;
+import com.sparta.maeng9newsfeed.common.dto.AuthUser;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
