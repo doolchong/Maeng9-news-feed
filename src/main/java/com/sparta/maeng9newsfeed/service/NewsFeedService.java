@@ -23,7 +23,8 @@ public class NewsFeedService {
     private final NewsFeedRepository newsFeedRepository;
 
     public List<BoardResponse> getNewsFeed(long userId) {
-        List<Friend> friendList = friendRepository.findAllBySender_Id(userId);
+        List<Friend> friendList = friendRepository.findAllBySender_Id(userId).orElseThrow(
+                () -> new IllegalArgumentException("친구 목록이 없습니다."));
         List<Long> friendIdList = friendList.stream().map(friend -> friend.getReceiver().getId()).toList();
         List<Board> boardList = newsFeedRepository.findTop10ByBoard_User_IdInOrderByBoardModifiedAt(friendIdList).stream().map(NewsFeed::getBoard).toList();
         for (Board board : boardList) {
@@ -33,9 +34,9 @@ public class NewsFeedService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0/1 * * * ?") // 나중에 한 시간으로 수정하기
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void renewNewsFeed() {
-        LocalDateTime expirationDate = LocalDateTime.now().minusHours(1); // 1시간 지난 데이터
+        LocalDateTime expirationDate = LocalDateTime.now().minusHours(1); // 1시간 지난 게시글
         newsFeedRepository.deleteAllByBoardCreatedAtBefore(expirationDate);
     }
 

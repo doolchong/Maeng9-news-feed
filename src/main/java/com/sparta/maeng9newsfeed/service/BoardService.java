@@ -11,10 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -92,6 +94,9 @@ public class BoardService {
 
     @Transactional
     public String boardLike(long boardId, long userId) {
+        if (findBoardById(boardId).getUser().getId() == userId) {
+            throw new IllegalArgumentException("자신의 게시물에 좋아요를 할 수 없습니다.");
+        }
         if (boardLikeRepository.findByBoard_IdAndUser_Id(boardId, userId).isPresent()) {
             boardLikeRepository.deleteByBoard_IdAndUser_Id(boardId, userId);
             return "좋아요를 취소했습니다.";
@@ -100,5 +105,12 @@ public class BoardService {
             boardLikeRepository.save(boardLike);
             return "좋아요를 했습니다.";
         }
+    }
+
+    public Page<BoardResponse> getHotBoardList() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("modifiedAt").descending());
+        LocalDateTime expirationDate = LocalDateTime.now().minusDays(1); // 1일을 기준
+        Page<Board> hotBoardList = boardRepository.findAllByCreatedAtAfterOrderByCommentsDesc(expirationDate, pageable);
+        return hotBoardList.map(BoardResponse::new);
     }
 }

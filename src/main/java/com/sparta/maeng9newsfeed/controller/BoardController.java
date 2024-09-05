@@ -44,4 +44,9 @@ public class BoardController {
     public ResponseEntity<String> boardLike(@PathVariable long boardId, @Auth AuthUser authUser) {
         return ResponseEntity.ok().body(boardService.boardLike(boardId, authUser.getId()));
     }
+
+    @GetMapping("/boards/hot")
+    public ResponseEntity<Page<BoardResponse>> getHotBoardList() {
+        return ResponseEntity.ok().body(boardService.getHotBoardList());
+    }
 }

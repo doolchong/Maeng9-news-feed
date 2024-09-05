@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -13,6 +15,8 @@ public class FriendDemand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "user_id", name = "sender_id", nullable = false)
@@ -27,14 +31,14 @@ public class FriendDemand {
         this.receiver = receiver;
     }
 
-    public FriendResponse toReceiverResponse(){
+    public FriendResponse toReceiverResponse() {
         return new FriendResponse(
                 this.getReceiver().getUserName(),
                 this.getReceiver().getEmail()
         );
     }
 
-    public FriendResponse toSenderResponse(){
+    public FriendResponse toSenderResponse() {
         return new FriendResponse(
                 this.getSender().getUserName(),
                 this.getSender().getEmail()
