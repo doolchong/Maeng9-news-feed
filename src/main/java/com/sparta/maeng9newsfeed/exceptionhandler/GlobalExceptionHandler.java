@@ -1,6 +1,6 @@
 package com.sparta.maeng9newsfeed.exceptionhandler;
 
-import com.sparta.maeng9newsfeed.dto.ExceptionResponse;
+import com.sparta.maeng9newsfeed.common.dto.ExceptionResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
