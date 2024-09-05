@@ -73,12 +73,6 @@ public class JwtUtil {
         res.addCookie(cookie);
     }
 
-    /* JWT 인증 토큰의 유효 기간을 확인
-    토큰의 클레임을 추출한다
-    클레임에서 만료 시간을 가져와 현재 시간과 비교
-    만료 시간이 현재 시간보다 이전이면 true를 반환하고, 그렇지 않으면 false를 반환
-     */
-
     public String substringToken(String tokenValue) {
 
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
@@ -88,7 +82,6 @@ public class JwtUtil {
         throw new NullPointerException("Not Found Token");
 
     }
-
 
     public Claims extractClaims(String token) {
         return Jwts.parserBuilder()
