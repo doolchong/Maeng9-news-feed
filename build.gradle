@@ -41,6 +41,7 @@ dependencies {
     implementation 'org.json:json:20230227'
 
     implementation 'at.favre.lib:bcrypt:0.10.2'
+
 }
 
 tasks.named('test') {
