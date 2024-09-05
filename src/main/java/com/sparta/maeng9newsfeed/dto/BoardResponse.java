@@ -1,7 +1,6 @@
 package com.sparta.maeng9newsfeed.dto;
 
 import com.sparta.maeng9newsfeed.entity.Board;
-import com.sparta.maeng9newsfeed.entity.Comment;
 import com.sparta.maeng9newsfeed.entity.Image;
 import lombok.Getter;
 
@@ -20,7 +19,7 @@ public class BoardResponse {
         userName = board.getUser().getUserName();
         content = board.getContent();
         imagePathList = board.getImages().stream().map(Image::getImagePath).toList();
-        likes = board.getBoardLikeList().stream().count();
+        likes = board.getBoardLikeList().size();
         commentList = board.getComments().stream().map(CommentInquiryResponse::commentToDto).toList();
     }
 
@@ -28,7 +27,7 @@ public class BoardResponse {
         userName = board.getUser().getUserName();
         content = board.getContent();
         imagePathList = imageList.stream().map(Image::getImagePath).toList();
-        likes = board.getBoardLikeList().stream().count();
+        likes = board.getBoardLikeList().size();
         commentList = board.getComments().stream().map(CommentInquiryResponse::commentToDto).toList();
     }
 }

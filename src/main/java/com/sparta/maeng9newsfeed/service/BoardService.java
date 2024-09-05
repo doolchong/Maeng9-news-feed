@@ -1,12 +1,9 @@
 package com.sparta.maeng9newsfeed.service;
 
-import com.sparta.maeng9newsfeed.annotation.Auth;
-import com.sparta.maeng9newsfeed.dto.AuthUser;
 import com.sparta.maeng9newsfeed.dto.BoardResponse;
 import com.sparta.maeng9newsfeed.entity.Board;
 import com.sparta.maeng9newsfeed.entity.BoardLike;
 import com.sparta.maeng9newsfeed.entity.Image;
-import com.sparta.maeng9newsfeed.entity.User;
 import com.sparta.maeng9newsfeed.repository.BoardLikeRepository;
 import com.sparta.maeng9newsfeed.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +26,7 @@ public class BoardService {
     private final ImageService imageService;
     private final BoardLikeRepository boardLikeRepository;
     private final UserService userService;
+    private final NewsFeedService newsFeedService;
 
     @Transactional
     public BoardResponse create(String content, List<MultipartFile> images, long userId) {
@@ -37,6 +35,8 @@ public class BoardService {
         Board saveBoard = boardRepository.save(board);
 
         List<Image> imageList = imageService.uploadImage(saveBoard, images);
+
+        newsFeedService.create(saveBoard);
 
         return new BoardResponse(saveBoard, imageList);
     }
