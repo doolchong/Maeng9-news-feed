@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -43,14 +44,14 @@ public class FriendService {
             throw new RuntimeException("해당 친구 요청이 이미 존재합니다.");
         }
         // 친구신청한 사용자에게 친구신청을 받았는지 확인
-        if(friendDemandRepository.findByReceiver_Id(receiver.getId()).isPresent()){
+        if(friendDemandRepository.findBySender_IdAndReceiver_Id(receiver.getId(), senderId).isPresent()){
             throw new RuntimeException("해당 사용자에게 친구 요청을 받았습니다.");
         }
         // 이미 친구인지 확인
         if(friendRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId()).isPresent()){
             throw new RuntimeException("해당 사용자와 이미 친구입니다.");
         }
-        // 친구 추가
+        // 친구 요청 추가
         friendDemandRepository.save(new FriendDemand(sender, receiver));
         return "친구 요청 완료";
     }
@@ -66,7 +67,9 @@ public class FriendService {
         User receiver = userRepository.findById(receiverId).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
         User sender = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
         // 해당 요청 유무 확인 후 친구요청 제거
-        friendDemandRepository.findBySender_IdAndReceiver_Id(sender.getId(), receiverId).ifPresent(friendDemandRepository::delete);
+        friendDemandRepository.findBySender_IdAndReceiver_Id(sender.getId(), receiverId)
+                .ifPresentOrElse(friendDemandRepository::delete,    // 해당 친구 요청이 있으면 -> 요청 목록에서 삭제
+                        () -> { throw new RuntimeException("해당 친구요청이 존재하지 않습니다."); });  // 없으면 -> 예외 발생
         // 친구 목록 데이블에 양방향 저장(보낸 경우, 받은 경우)
         friendRepository.save(new Friend(sender, receiver));
         friendRepository.save(new Friend(receiver, sender));
@@ -83,7 +86,8 @@ public class FriendService {
     public String rejectFriend(Long receiverId, FriendRequest friendRequest) {
         User sender = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
         friendDemandRepository.findBySender_IdAndReceiver_Id(sender.getId(), receiverId)
-                .ifPresent(friendDemandRepository::delete);     // 해당 친구 요청이 있으면 -> 요청 목록에서 삭제
+                .ifPresentOrElse(friendDemandRepository::delete,    // 해당 친구 요청이 있으면 -> 요청 목록에서 삭제
+                        () -> { throw new RuntimeException("해당 친구요청이 존재하지 않습니다."); });  // 없으면 -> 예외 발생
         return "친구 거절 완료";
     }
 
@@ -139,10 +143,12 @@ public class FriendService {
     public String deleteFriend(Long senderId, FriendRequest friendRequest) {
         User receiver = userRepository.findById(friendRequest.getUserId()).orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다."));
         // 친구 목록 데이블에서 양방향 삭제(보낸 경우, 받은 경우)
-        friendRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId())
-                .ifPresent(friendRepository::delete);
-        friendRepository.findBySender_IdAndReceiver_Id(receiver.getId(), senderId)
-                .ifPresent(friendRepository::delete);
+        Stream.of(
+                        friendRepository.findBySender_IdAndReceiver_Id(senderId, receiver.getId()),
+                        friendRepository.findBySender_IdAndReceiver_Id(receiver.getId(), senderId)
+                )
+                .map(optionalFriend -> optionalFriend.orElseThrow(() -> new RuntimeException("친구관계가 아닙니다.")))
+                .forEach(friendRepository::delete);
         return "친구 삭제 완료";
     }
 
