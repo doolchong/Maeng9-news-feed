@@ -11,7 +11,7 @@ public class UserResponse {
     private final String userName;
     private final String email;
     private final String intro;
-    private final Integer followers;
+    private final Integer friends;
 
 
     public static UserResponse userResponse(User user, int followerCount) {

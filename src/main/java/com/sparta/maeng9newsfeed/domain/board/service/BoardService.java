@@ -109,10 +109,10 @@ public class BoardService {
         }
     }
 
-    public Page<BoardResponse> getHotBoardList() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("modifiedAt").descending());
+    public Page<BoardResponse> getHotBoardList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
         LocalDateTime expirationDate = LocalDateTime.now().minusDays(1); // 1일을 기준
-        Page<Board> hotBoardList = boardRepository.findAllByCreatedAtAfterOrderByCommentsDesc(expirationDate, pageable);
+        Page<Board> hotBoardList = boardRepository.findByCreatedAtAfterOrderByBoardLikeCount(expirationDate, pageable);
         return hotBoardList.map(BoardResponse::new);
     }
 }

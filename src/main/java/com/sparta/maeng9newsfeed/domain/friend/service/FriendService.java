@@ -70,8 +70,8 @@ public class FriendService {
      */
     @Transactional
     public String acceptFriend(Long receiverId, FriendRequest friendRequest) {
-        User sender = findUserById(receiverId);
-        User receiver = findUserById(friendRequest.getUserId());
+        User sender = findUserById(friendRequest.getUserId());
+        User receiver = findUserById(receiverId);
         // 해당 요청 유무 확인 후 친구요청 제거
         friendDemandRepository.findBySender_IdAndReceiver_Id(sender.getId(), receiverId)
                 .ifPresentOrElse(friendDemandRepository::delete,    // 해당 친구 요청이 있으면 -> 요청 목록에서 삭제

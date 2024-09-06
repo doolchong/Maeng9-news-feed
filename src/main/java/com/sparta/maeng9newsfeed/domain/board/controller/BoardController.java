@@ -46,7 +46,7 @@ public class BoardController {
     }
 
     @GetMapping("/boards/hot")
-    public ResponseEntity<Page<BoardResponse>> getHotBoardList() {
-        return ResponseEntity.ok().body(boardService.getHotBoardList());
+    public ResponseEntity<Page<BoardResponse>> getHotBoardList(@RequestParam(defaultValue = "0", required = false) int page, @RequestParam(defaultValue = "10", required = false) int size) {
+        return ResponseEntity.ok().body(boardService.getHotBoardList(page, size));
     }
 }
