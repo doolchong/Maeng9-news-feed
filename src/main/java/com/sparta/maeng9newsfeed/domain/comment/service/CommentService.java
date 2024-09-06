@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,15 +76,9 @@ public class CommentService {
      * @return List<CommentInquiryResponse> : 요청한 게시글의 전체 댓글 목록
      */
     public List<CommentInquiryResponse> getComments(long boardId) {
-        Board board = findBoardById(boardId);
-
-        List<CommentInquiryResponse> dtoList = new ArrayList<>();
-
-        for (Comment comment : board.getComments()) {
-            CommentInquiryResponse commentDto = CommentInquiryResponse.commentToDto(comment);
-            dtoList.add(commentDto);
-        }
-        return dtoList;
+        return findBoardById(boardId).getComments().stream()
+                .map(CommentInquiryResponse::commentToDto)
+                .toList();
     }
 
     /**
