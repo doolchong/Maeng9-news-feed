@@ -22,12 +22,17 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{boardId}/comment")
-    public ResponseEntity<CommentSaveResponse> saveComment(@Auth AuthUser authUser, @PathVariable long boardId, @RequestBody CommentSaveRequest commentSaveRequest) {
+    public ResponseEntity<CommentSaveResponse> saveComment(@Auth AuthUser authUser,
+                                                           @PathVariable long boardId,
+                                                           @RequestBody CommentSaveRequest commentSaveRequest) {
         return ResponseEntity.ok(commentService.saveComment(authUser.getId(), boardId, commentSaveRequest));
     }
 
     @PutMapping("/{boardId}/{commentId}")
-    public ResponseEntity<CommentUpdateResponse> updateComment(@Auth AuthUser authUser, @PathVariable long boardId, @PathVariable long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest) {
+    public ResponseEntity<CommentUpdateResponse> updateComment(@Auth AuthUser authUser,
+                                                               @PathVariable long boardId,
+                                                               @PathVariable long commentId,
+                                                               @RequestBody CommentUpdateRequest commentUpdateRequest) {
         return ResponseEntity.ok(commentService.updateComment(authUser.getId(), boardId, commentId, commentUpdateRequest));
     }
 
@@ -37,7 +42,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/{boardId}/{commentId}")
-    public void deleteComment(@Auth AuthUser authUser, @PathVariable long boardId, @PathVariable long commentId) {
+    public void deleteComment(@Auth AuthUser authUser,
+                              @PathVariable long boardId,
+                              @PathVariable long commentId) {
         commentService.delete(authUser.getId(), boardId, commentId);
     }
 }
