@@ -3,9 +3,9 @@ package com.sparta.maeng9newsfeed.domain.friend.service;
 import com.sparta.maeng9newsfeed.domain.friend.dto.request.FriendRequest;
 import com.sparta.maeng9newsfeed.domain.friend.dto.response.FriendResponse;
 import com.sparta.maeng9newsfeed.domain.friend.entity.Friend;
-import com.sparta.maeng9newsfeed.domain.friend.demend.entity.FriendDemand;
+import com.sparta.maeng9newsfeed.domain.friend.entity.FriendDemand;
 import com.sparta.maeng9newsfeed.domain.user.entity.User;
-import com.sparta.maeng9newsfeed.domain.friend.demend.repository.FriendDemandRepository;
+import com.sparta.maeng9newsfeed.domain.friend.repository.FriendDemandRepository;
 import com.sparta.maeng9newsfeed.domain.friend.repository.FriendRepository;
 import com.sparta.maeng9newsfeed.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FriendService {
-
 
     private final FriendRepository friendRepository;
     private final FriendDemandRepository friendDemandRepository;
@@ -95,10 +94,9 @@ public class FriendService {
     public String rejectFriend(Long receiverId, FriendRequest friendRequest) {
         User sender = findUserById(friendRequest.getUserId());
         friendDemandRepository.findBySender_IdAndReceiver_Id(sender.getId(), receiverId)
-                .ifPresentOrElse(friendDemandRepository::delete,    // 해당 친구 요청이 있으면 -> 요청 목록에서 삭제
-                        () -> {
-                            throw new RuntimeException("해당 친구요청이 존재하지 않습니다.");
-                        });  // 없으면 -> 예외 발생
+                .ifPresentOrElse(friendDemandRepository::delete, () -> {    // 해당 친구 요청이 있으면 -> 요청 목록에서 삭제
+                    throw new RuntimeException("해당 친구요청이 존재하지 않습니다.");
+                });  // 없으면 -> 예외 발생
         return "친구 거절 완료";
     }
 
@@ -174,6 +172,12 @@ public class FriendService {
         friendDemandRepository.deleteAllByCreatedAtBefore(expirationDate);
     }
 
+    /**
+     * 사용자 id로 해당 사용자 객체 조회 및 반환
+     *
+     * @param userId : 찾을 사용자 id
+     * @return : 찾은 사용자 객체(User)
+     */
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. ID: " + userId));

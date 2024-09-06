@@ -33,7 +33,8 @@ public class FriendController {
     }
 
     @PostMapping("/reject")
-    public ResponseEntity<String> rejectFriend(@Auth AuthUser authUser, @RequestBody FriendRequest friendRequest) {
+    public ResponseEntity<String> rejectFriend(@Auth AuthUser authUser,
+                                               @RequestBody FriendRequest friendRequest) {
         Long userId = authUser.getId();
         return ResponseEntity.ok(friendService.rejectFriend(userId, friendRequest));
     }
@@ -57,7 +58,8 @@ public class FriendController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteFriend(@Auth AuthUser authUser, @RequestBody FriendRequest friendRequest) {
+    public ResponseEntity<String> deleteFriend(@Auth AuthUser authUser,
+                                               @RequestBody FriendRequest friendRequest) {
         Long userId = authUser.getId();
         return ResponseEntity.ok(friendService.deleteFriend(userId, friendRequest));
     }
