@@ -24,7 +24,8 @@ public class UserService {
     private final FriendService friendService;
 
     public UserResponse getUser(long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("해당 사용자를 찾을 수 없습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NullPointerException("해당 사용자를 찾을 수 없습니다."));
         List<FriendResponse> friendList = friendService.getFriendList(userId);
         int followrCount = friendList.size();
         return UserResponse.userResponse(user, followrCount);
@@ -42,22 +43,20 @@ public class UserService {
 
     public User findByUserId(long userId) {
 
-        return userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("유저를 찾을 수 없습니다.")
-        );
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.")
+                );
     }
 
     @Transactional
     public void updatePassword(long userId, PasswordChangeRequest passwordChangeRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("해당 사용자를 찾을 수 없습니다."));
-
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NullPointerException("해당 사용자를 찾을 수 없습니다."));
         // 사용자 비밀번호 인증
         if (!passwordEncoder.matches(passwordChangeRequest.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
         }
-
         user.updatePaswword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
         userRepository.save(user);
-
     }
 }
