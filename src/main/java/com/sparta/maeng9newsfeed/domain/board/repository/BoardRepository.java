@@ -16,5 +16,4 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("SELECT b FROM Board b LEFT JOIN b.boardLikeList bl WHERE b.createdAt > :createdAt GROUP BY b.id ORDER BY COUNT(bl) DESC")
     Page<Board> findByCreatedAtAfterOrderByBoardLikeCount(@Param("createdAt") LocalDateTime createdAt, Pageable pageable);
-    //Page<Board> findByCreatedAtAfterOrderByBoardLikeListDesc(LocalDateTime expirationDate, Pageable pageable);
 }
