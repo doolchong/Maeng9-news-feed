@@ -26,9 +26,10 @@ public class NewsFeedService {
         List<Friend> friendList = friendRepository.findAllBySender_Id(userId).orElseThrow(
                 () -> new IllegalArgumentException("친구 목록이 없습니다."));
         List<Long> friendIdList = friendList.stream().map(friend -> friend.getReceiver().getId()).toList();
-        List<Board> boardList = newsFeedRepository.findTop10ByBoard_User_IdInOrderByBoardModifiedAt(friendIdList).stream().map(NewsFeed::getBoard).toList();
-        for (Board board : boardList) {
-            System.out.println(board.getUser().getId());
+        List<Board> boardList = newsFeedRepository.findTop10ByBoard_User_IdInOrderByBoardModifiedAtDesc(friendIdList)
+                .stream().map(NewsFeed::getBoard).toList();
+        for (Long l : friendIdList) {
+            System.out.println(l);
         }
         return boardList.stream().map(BoardResponse::new).toList();
     }

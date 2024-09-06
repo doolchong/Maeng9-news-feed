@@ -22,6 +22,7 @@ public class JwtFilter implements Filter {
 
     private final JwtUtil jwtUtil;
     private final Pattern authPattern = Pattern.compile("^/auth.*");
+    private final Pattern imagePattern = Pattern.compile("^/images.*");
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -36,7 +37,7 @@ public class JwtFilter implements Filter {
         String url = httpRequest.getRequestURI();
 
         // `/auth`로 시작하는 URL은 필터를 통과하지 않도록 설정
-        if (authPattern.matcher(url).matches()) {
+        if (authPattern.matcher(url).matches() || imagePattern.matcher(url).matches()) {
             chain.doFilter(request, response);
             return;
         }

@@ -4,6 +4,7 @@ import com.sparta.maeng9newsfeed.common.entity.Timestamped;
 import com.sparta.maeng9newsfeed.domain.comment.entity.Comment;
 import com.sparta.maeng9newsfeed.domain.image.entity.Image;
 import com.sparta.maeng9newsfeed.domain.like.board.entity.BoardLike;
+import com.sparta.maeng9newsfeed.domain.newsfeed.entity.NewsFeed;
 import com.sparta.maeng9newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,11 +29,14 @@ public class Board extends Timestamped {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLike> boardLikeList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private NewsFeed newsFeed;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

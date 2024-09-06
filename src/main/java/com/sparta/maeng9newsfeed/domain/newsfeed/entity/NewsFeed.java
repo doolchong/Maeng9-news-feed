@@ -15,7 +15,7 @@ public class NewsFeed {
     @Column(name = "news_feed_id")
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "board_id")
     private Board board;
 

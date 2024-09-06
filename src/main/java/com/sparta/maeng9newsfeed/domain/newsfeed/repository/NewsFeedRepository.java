@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NewsFeedRepository extends JpaRepository<NewsFeed, Long> {
 
-    List<NewsFeed> findTop10ByBoard_User_IdInOrderByBoardModifiedAt(List<Long> user_id);
+    List<NewsFeed> findTop10ByBoard_User_IdInOrderByBoardModifiedAtDesc(List<Long> user_id);
 
     void deleteAllByBoardCreatedAtBefore(LocalDateTime expirationDate);
 }
