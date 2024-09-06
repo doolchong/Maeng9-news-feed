@@ -27,8 +27,10 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public UserUpdateResponse updateUser(@Auth AuthUser authUser, @RequestBody UserUpdateRequest userUpdateRequest) {
+    public UserUpdateResponse updateUser(@Auth AuthUser authUser,
+                                         @RequestBody UserUpdateRequest userUpdateRequest) {
         Long userId = authUser.getId();
+
         return userService.updateUser(userId, userUpdateRequest);
     }
 
@@ -39,9 +41,9 @@ public class UserController {
             // 검증 실패 시 첫 번째 오류 메시지 반환
             return ResponseEntity.badRequest().body(result.getAllErrors().get(0).getDefaultMessage());
         }
-
         Long userId = authUser.getId();
         userService.updatePassword(userId, passwordChangeRequest);
+
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
     }
 }

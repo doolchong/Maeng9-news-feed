@@ -24,12 +24,10 @@ public class AuthService {
     @Transactional
     public String signup(SignupRequest signupRequest) {
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
-
         // 가입했었던이메일인지 확인
         if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
             throw new IllegalArgumentException("사용할 수 없는 email입니다.");
         }
-        
         User newUser = new User(
                 signupRequest.getUserName(),
                 signupRequest.getEmail(),
@@ -67,19 +65,15 @@ public class AuthService {
 
     @Transactional
     public String signout(long userId, SignoutRequest signoutRequest) {
-
         User authuser = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("존재하지 않은 아이디입니다"));
-
         if (!passwordEncoder.matches(signoutRequest.getPassword(), authuser.getPassword())) {
 
             return "비밀 번호가 일치하지 않습니다";
         }
-
         //회원 탈퇴 처리
         authuser.setStatus(false);
         userRepository.save(authuser);
 
         return "회원 탈퇴 완료";
-
     }
 }
