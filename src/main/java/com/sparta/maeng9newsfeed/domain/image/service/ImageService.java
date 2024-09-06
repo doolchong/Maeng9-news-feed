@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,48 +23,32 @@ import java.util.UUID;
 public class ImageService {
 
     private final ImageRepository imageRepository;
-
+    
     @Transactional
     public List<Image> uploadImage(Board board, List<MultipartFile> images) {
-        List<Image> imageList = new ArrayList<>();
+        String uploadDirectory = "src/main/resources/static/images/";
 
-        try {
-            String uploadDirectory = "src/main/resources/static/images/";
-
-            for (MultipartFile image : images) {
-                //이미지 파일 경로를 저장
+        return images.stream().map(image -> {
+            try {
                 String dbFilePath = saveImage(image, uploadDirectory);
-
                 Image img = new Image(dbFilePath, board);
-
                 imageRepository.save(img);
-
-                imageList.add(img);
+                return img;
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("파일 저장 중 오류 발생", e);
             }
-        } catch (IOException e) {
-            // 파일 저장 중 오류가 발생한 경우 처리
-            e.printStackTrace();
-        }
-
-        return imageList;
+        }).toList();
     }
 
     private String saveImage(MultipartFile image, String uploadDirectory) throws IOException {
-        //파일 이름 UUID를 이용해 랜덤으로 생성
-        String fileName = UUID.randomUUID().toString().replace("-", "") + "-" + image.getOriginalFilename();
+        String fileName = UUID.randomUUID().toString().replace("-", "") + "-" + image.getOriginalFilename();    //파일 이름 UUID를 이용해 랜덤으로 생성
+        String filePath = uploadDirectory + fileName;   //실제 파일이 저장되는 경로
+        String dbImagePath = "/images/" + fileName; //DB에 저장할 경로 문자열
 
-        //실제 파일이 저장되는 경로
-        String filePath = uploadDirectory + fileName;
-
-        //DB에 저장할 경로 문자열
-        String dbImagePath = "/images/" + fileName;
-
-        //Path 객체 생성
-        Path path = Paths.get(filePath);
-        //디렉토리 생성
-        Files.createDirectories(path.getParent());
-        //디렉토리에 파일 저장
-        Files.write(path, image.getBytes());
+        Path path = Paths.get(filePath);    //Path 객체 생성
+        Files.createDirectories(path.getParent());  //디렉토리 생성
+        Files.write(path, image.getBytes());    //디렉토리에 파일 저장
 
         return dbImagePath;
     }
