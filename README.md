@@ -3,7 +3,7 @@
 
 ## 팀원 정보
 
-<img src="./image/팀원정보.png" width = "1000px">
+<img src="./image/팀원정보.PNG" width = "1000px">
 
 ### 1. 프로젝트
 
@@ -97,11 +97,11 @@ https://docs.google.com/presentation/d/1hZcU27n_A6LtsmD3sXJhFT_JjATnEvjs/edit?us
 
 [📅 WBS]
 
-<img src="./image/WBS.png" width = "500px">
+<img src="./image/WBS.PNG" width = "500px">
 
 [🔥 트러블슈팅 기록]
 
-<img src="./image/트러블슈팅.png" width = "600px">
+<img src="./image/트러블슈팅.PNG" width = "600px">
 
 ### 3. 와이어프레임 & 플로우차트
 
