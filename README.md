@@ -156,7 +156,7 @@ https://excalidraw.com/#room=1b3833da89884218d8ca,wGYGNEw1pWEVgvTr1zKLLw
   •User Entity
 
   | Column | 타입 |
-                                                                  | --- | --- |
+  | --- | --- |
   | ID | bigint |
   | email | varchar |
   | password | varchar |
@@ -167,7 +167,7 @@ https://excalidraw.com/#room=1b3833da89884218d8ca,wGYGNEw1pWEVgvTr1zKLLw
   • Board Entity
 
   | Column | 타입 |
-                                                                | --- | --- |
+  | --- | --- |
   | ID | bigint |
   | user_id | bigint |
   | 내용 | varchar |
@@ -177,7 +177,7 @@ https://excalidraw.com/#room=1b3833da89884218d8ca,wGYGNEw1pWEVgvTr1zKLLw
   • Comment Entity
 
   | Column | 타입 |
-                                                                  | --- | --- |
+  | --- | --- |
   | ID | bigint |
   | user_id | bigint |
   | board_id | bigint |
@@ -188,7 +188,7 @@ https://excalidraw.com/#room=1b3833da89884218d8ca,wGYGNEw1pWEVgvTr1zKLLw
   • Friend Entity
 
   | Column | 타입 |
-                                                                | --- | --- |
+  | --- | --- |
   | ID | bigint |
   | sender_id | bigint |
   | receiver_id | bigint |
@@ -197,7 +197,7 @@ https://excalidraw.com/#room=1b3833da89884218d8ca,wGYGNEw1pWEVgvTr1zKLLw
 - • Friend Demand Entity
 
   | Column | 타입 |
-                                                                  | --- | --- |
+  | --- | --- |
   | ID | bigint |
   | sender_id | bigint |
   | receiver_id | bigint |
@@ -205,7 +205,7 @@ https://excalidraw.com/#room=1b3833da89884218d8ca,wGYGNEw1pWEVgvTr1zKLLw
     - Board Like Entity
 
   | Column | 타입 |
-                                                                  | --- | --- |
+  | --- | --- |
   | ID | bigint |
   | board_id | bigint |
   | user_id | bigint |
@@ -213,7 +213,7 @@ https://excalidraw.com/#room=1b3833da89884218d8ca,wGYGNEw1pWEVgvTr1zKLLw
     - Comment Like Entity
 
   | Column | 타입 |
-                                                                | --- | --- |
+  | --- | --- |
   | ID | bigint |
   | comment_id | bigint |
   | user_id | bigint |
