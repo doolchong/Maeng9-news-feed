@@ -1,4 +1,4 @@
-package com.sparta.maeng9newsfeed.domain.friend.demend.entity;
+package com.sparta.maeng9newsfeed.domain.friend.entity;
 
 import com.sparta.maeng9newsfeed.domain.friend.dto.response.FriendResponse;
 import com.sparta.maeng9newsfeed.domain.user.entity.User;

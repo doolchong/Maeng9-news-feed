@@ -21,7 +21,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/boards")
-    public ResponseEntity<BoardResponse> create(@RequestPart("content") String content, @RequestPart("image") List<MultipartFile> images, @Auth AuthUser authUser) {
+    public ResponseEntity<BoardResponse> create(@RequestPart("content") String content,
+                                                @RequestPart("image") List<MultipartFile> images,
+                                                @Auth AuthUser authUser) {
         return ResponseEntity.ok().body(boardService.create(content, images, authUser.getId()));
     }
 
@@ -31,22 +33,28 @@ public class BoardController {
     }
 
     @PutMapping("/boards/{boardId}")
-    public ResponseEntity<BoardResponse> update(@PathVariable long boardId, @RequestPart("content") String content, @RequestPart("image") List<MultipartFile> images, @Auth AuthUser authUser) {
+    public ResponseEntity<BoardResponse> update(@PathVariable long boardId,
+                                                @RequestPart("content") String content,
+                                                @RequestPart("image") List<MultipartFile> images,
+                                                @Auth AuthUser authUser) {
         return ResponseEntity.ok().body(boardService.getBoard(boardService.update(boardId, content, images, authUser.getId())));
     }
 
     @DeleteMapping("/boards/{boardId}")
-    public ResponseEntity<String> delete(@PathVariable long boardId, @Auth AuthUser authUser) {
+    public ResponseEntity<String> delete(@PathVariable long boardId,
+                                         @Auth AuthUser authUser) {
         return ResponseEntity.ok().body(boardService.delete(boardId, authUser.getId()));
     }
 
     @PostMapping("/boards/{boardId}/like")
-    public ResponseEntity<String> boardLike(@PathVariable long boardId, @Auth AuthUser authUser) {
+    public ResponseEntity<String> boardLike(@PathVariable long boardId,
+                                            @Auth AuthUser authUser) {
         return ResponseEntity.ok().body(boardService.boardLike(boardId, authUser.getId()));
     }
 
     @GetMapping("/boards/hot")
-    public ResponseEntity<Page<BoardResponse>> getHotBoardList(@RequestParam(defaultValue = "0", required = false) int page, @RequestParam(defaultValue = "10", required = false) int size) {
+    public ResponseEntity<Page<BoardResponse>> getHotBoardList(@RequestParam(defaultValue = "0", required = false) int page,
+                                                               @RequestParam(defaultValue = "10", required = false) int size) {
         return ResponseEntity.ok().body(boardService.getHotBoardList(page, size));
     }
 }
