@@ -15,7 +15,8 @@ public class CommentLikeController {
     private final CommentLikeService commentLikeService;
 
     @PostMapping("/boards/{boardId}/{commentId}/like")
-    public void likeComment(@Auth AuthUser authUser, @PathVariable long commentId) {
+    public void likeComment(@Auth AuthUser authUser,
+                            @PathVariable long commentId) {
         commentLikeService.likeComment(authUser.getId(), commentId);
     }
 }
