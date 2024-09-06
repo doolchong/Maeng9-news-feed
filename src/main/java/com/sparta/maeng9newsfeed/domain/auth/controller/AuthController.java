@@ -27,14 +27,12 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<String> signup(@RequestBody @Valid SignupRequest signupRequest, BindingResult result) {
-
+    public ResponseEntity<String> signup(@RequestBody @Valid SignupRequest signupRequest,
+                                         BindingResult result) {
         if (result.hasErrors()) {
             // 검증 실패 시 첫 번째 오류 메시지 반환
             return ResponseEntity.badRequest().body(result.getAllErrors().get(0).getDefaultMessage());
         }
-
-
         String bearerToken = authService.signup(signupRequest);
         return ResponseEntity
                 .ok()
@@ -43,7 +41,8 @@ public class AuthController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest,
+                                      HttpServletResponse response) {
         String token = authService.login(loginRequest);
         jwtUtil.addJwtToCookie(token, response);
         return ResponseEntity.ok().build();
@@ -56,7 +55,8 @@ public class AuthController {
     }
 
     @DeleteMapping("/signout")
-    public ResponseEntity<String> signout(@Auth AuthUser authUser, @RequestBody SignoutRequest signoutRequest) {
+    public ResponseEntity<String> signout(@Auth AuthUser authUser,
+                                          @RequestBody SignoutRequest signoutRequest) {
         return ResponseEntity.ok(authService.signout(authUser.getId(), signoutRequest));
     }
 }

@@ -27,14 +27,16 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public UserUpdateResponse updateUser(@Auth AuthUser authUser, @RequestBody UserUpdateRequest userUpdateRequest) {
+    public UserUpdateResponse updateUser(@Auth AuthUser authUser,
+                                         @RequestBody UserUpdateRequest userUpdateRequest) {
         Long userId = authUser.getId();
         return userService.updateUser(userId, userUpdateRequest);
     }
 
     @PatchMapping("/password")
     public ResponseEntity<String> updatePassword(@Auth AuthUser authUser,
-                                                 @RequestBody @Valid PasswordChangeRequest passwordChangeRequest, BindingResult result) {
+                                                 @RequestBody @Valid PasswordChangeRequest passwordChangeRequest,
+                                                 BindingResult result) {
         if (result.hasErrors()) {
             // 검증 실패 시 첫 번째 오류 메시지 반환
             return ResponseEntity.badRequest().body(result.getAllErrors().get(0).getDefaultMessage());
